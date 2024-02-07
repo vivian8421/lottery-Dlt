@@ -1,0 +1,247 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>v3-大乐透规则选号工具-规则排除版</title>
+</head>
+<body style="padding:300px 5px 0 5px;margin:0;width:100%;text-align:center;">
+	<div style="margin:0;width:100%;text-align:center;">
+		<div style="width:85%;margin:0 auto;">
+			<input id="outputNum" style="width:79%;text-align:center;font-size:60px;" type="number" placeholder="生成几组" /> 
+			<input id="startGenerate" style="width:20%;text-align:center;font-size:60px;" readonly="readonly" placeholder="生成" />
+		</div>
+	</div>
+	<div style="margin:0;width:100%;">
+		<table border="5" cellspacing="4" style="margin:10px auto;width:85%;text-align:center;">
+			<thead style="font-size: 60px;">
+				<th>序号</th>
+				<th colspan="5">前五位</th>
+				<th colspan="2">后二位</th>
+			</thead>
+			<tbody id="outputTable"></tbody>
+		</table>
+	</div>
+</body>
+<script type="text/javascript">
+	Array.prototype.sortInt = function() {
+		return this.sort(function(a, b) {
+			return Number(a) - Number(b)
+		})
+	};
+	Array.prototype.remove = function(vals) {
+		if (vals instanceof Array) {
+			for (let i = 0; i < vals.length; i++) {
+				this.remove(vals[i])
+			}
+		} else {
+			var index = this.indexOfInt(vals)
+			if (index > -1) {
+				this.splice(index, 1)
+			}
+		}
+		return this
+	};
+	Array.prototype.sumInt = function() {
+		let sum = 0
+		for (let i = 0; i < this.length; i++) {
+			sum = sum + Number(this[i])
+		}
+		return sum
+	};
+	Array.prototype.avgInt = function() {
+		return Number(this.sumInt()) / this.length
+	};
+	Array.prototype.extInt = function() {
+		let sortInt = this.sortInt()
+		return Number(sortInt[this.length - 1]) - Number(sortInt[0])
+	};
+	Array.prototype.indexOfInt = function(val) {
+		for (let i = 0; i < this.length; i++) {
+			if (Number(Number(this[i]) == Number(val))) {
+				return i
+			}
+		}
+		return -1
+	}
+	Array.prototype.avgIntItem = function(index1, index2) {
+		return (Number(this[index1]) + Number(this[index2])) / 2
+	};
+
+	function getRandom(upperLimit) {
+		return Math.floor(Math.random() * upperLimit) + 1
+	}
+
+	var officialData = []
+	function getOfficialData() {
+		console.info("getOfficialData>total")
+
+		//https://webapi.sporttery.cn/gateway/lottery/getHistoryPageListV1.qry?gameNo=85&provinceId=0&isVerify=1&termLimits=0&pageNo=1&pageSize=30
+		var requestUrl = "https://webapi.sporttery.cn/gateway/lottery/getHistoryPageListV1.qry?gameNo=85&provinceId=0&isVerify=1&termLimits=0&pageNo=1&pageSize=";
+		var request = new XMLHttpRequest()
+		request.open('GET', requestUrl + "1", true)
+		request.send()
+		//获取数据后的处理程序
+		request.onreadystatechange = function() {
+			if (request.readyState == 4 && request.status == 200) {
+				var response = JSON.parse(request.responseText)
+				console.info("getOfficialData>" + response.value.total)
+
+				//https://webapi.sporttery.cn/gateway/lottery/getHistoryPageListV1.qry?gameNo=85&provinceId=0&isVerify=1&termLimits=0&pageNo=1&pageSize=30
+				requestUrl = "https://webapi.sporttery.cn/gateway/lottery/getHistoryPageListV1.qry?gameNo=85&provinceId=0&isVerify=1&termLimits=0&pageNo=1&pageSize=";
+				request = new XMLHttpRequest()
+				request.open('GET', requestUrl + response.value.total, true)
+				request.send()
+				//获取数据后的处理程序
+				request.onreadystatechange = function() {
+					if (request.readyState == 4 && request.status == 200) {
+						var response = JSON.parse(request.responseText)
+						var valueList = response.value.list
+
+						for (let i = 0; i < valueList.length; i++) {
+							officialData.push(valueList[i].lotteryDrawResult.split(" "))
+						}
+
+						generate(5)
+					}
+				};
+			}
+		};
+	}
+
+	function generate(outputNum) {
+		if (!outputNum) {
+			outputNum = 5
+		}
+		if (outputNum > 30) {
+			outputNum = 30
+		}
+		document.getElementById("outputNum").value=outputNum
+		console.info("generate>" + outputNum)
+
+		let generateBefore = []
+		let generateAfter = []
+		gBefore : for (let i = 0; i < outputNum; i++) {
+			let one_before = generate_one_before()
+
+			let avgIntItem0 = one_before.avgIntItem(0, 1)
+			if (avgIntItem0<2 || avgIntItem0>17) {
+				i--
+				continue gBefore
+			}
+			let avgIntItem1 = one_before.avgIntItem(1, 2)
+			if (avgIntItem1<5 || avgIntItem1>27) {
+				i--
+				continue gBefore
+			}
+			let avgIntItem2 = one_before.avgIntItem(2, 3)
+			if (avgIntItem2<10 || avgIntItem2>32) {
+				i--
+				continue gBefore
+			}
+			let avgIntItem3 = one_before.avgIntItem(1, 4)
+			if (avgIntItem3<14 || avgIntItem3>29) {
+				i--
+				continue gBefore
+			}
+			let avgIntItem4 = one_before.avgIntItem(3, 4)
+			if (avgIntItem4<20 || avgIntItem4>35) {
+				i--
+				continue gBefore
+			}
+
+			generateBefore.push(one_before)
+
+			gAfter : for (let j = 0; j < 1; j++) {
+				let one_after = generate_one_after()
+
+				for (let k = 1; k < 7; k++) {
+					let likeAfter = officialData[k].slice(5, 7).remove(one_after)
+					if (likeAfter.length < 1) {
+						j--
+						continue gAfter
+					}
+				}
+
+				let frontAfterAvg = (one_before.sumInt() + one_after.sumInt()) / 2
+				if (frontAfterAvg<34 || frontAfterAvg>69) {
+					j--
+					continue gAfter
+				}
+
+				generateAfter.push(one_after)
+				break gAfter;
+			}
+		}
+
+		let generateData = []
+		for (let i = 0; i < outputNum; i++) {
+			generateData.push(generateBefore[i].concat(generateAfter[i]))
+		}
+		outputTable(generateData)
+	}
+
+	function outputTable(generateData) {
+		let trStr = ""
+		for (let i = 0; i < generateData.length; i++) {
+			let one = generateData[i]
+
+			trStr += "<tr style='font-size:60px;" + (i % 2 == 0 ? "background-color:#cdcdcd;" : "") + "'><td>第" + (i + 1) + "组</td>"
+			for (let j = 0; j < 5; j++) {
+				trStr += "<td>" + (one[j] < 10 ? "0" + one[j] : one[j]) + "</td>"
+			}
+			for (let j = 5; j < 7; j++) {
+				trStr += "<td><b>" + (one[j] < 10 ? "0" + one[j] : one[j]) + "</b></td>"
+			}
+			trStr += "</tr>"
+		}
+		document.getElementById("outputTable").innerHTML = trStr
+	}
+
+	function getItemPool(start, end) {
+		let pool = []
+		for (let j = start; j <= end; j++) {
+			pool.push(j)
+		}
+		return pool
+	}
+	function generate_one_before() {
+		let pool1 = getItemPool(1, 35)
+
+		pool1.remove(officialData[0].slice(0, 5))
+
+		let before = [];
+		for (let j = 0; j < 5; j++) {
+
+			for (let k = 1; k < 3; k++) {
+				let officiaIndex = officialData[k][j]
+				pool1.remove(officiaIndex)
+			}
+			
+			let index = pool1[getRandom(pool1.length) - 1]
+			pool1.remove(index)
+			before.push(index)
+		}
+		return before.sortInt()
+	}
+	function generate_one_after() {
+		let pool2 = getItemPool(1, 12)
+
+		pool2.remove(officialData[0].slice(5, 7))
+
+		let after = [];
+
+		for (let j = 5; j < 7; j++) {
+			let index = pool2[getRandom(pool2.length) - 1]
+			pool2.remove(index)
+			after.push(index)
+		}
+
+		return after.sortInt()
+	}
+
+	document.getElementById("startGenerate").onclick = function() {
+		generate(document.getElementById("outputNum").value)
+	}
+
+	getOfficialData()
+</script>
+</html>

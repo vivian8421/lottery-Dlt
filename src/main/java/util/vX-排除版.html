@@ -1,0 +1,288 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>vX-排除版</title>
+</head>
+<body style="padding: 300px 5px 0 5px; margin: 0; width: 100%; text-align: center; background-color: #000;color: white;">
+	<div style="margin: 0; width: 100%; text-align: center;">
+		<div style="width: 93%; margin: 0 auto;">
+			<input id="outputNum" style="width: 79%; text-align: center; font-size: 60px;" type="number" placeholder="生成几组" value="5" /> <input id="startGenerate"
+				style="width: 20%; text-align: center; font-size: 60px;" readonly="readonly" placeholder="生成" />
+		</div>
+	</div>
+	<div style="margin: 0; width: 100%;">
+		<table border="5" cellspacing="4" style="margin: 10px auto; width: 93%; text-align: center;">
+			<thead style="font-size: 60px;">
+				<th style="width: 25%;">序&nbsp&nbsp号</th>
+				<th style="width: 50%;" colspan="5">前五位</th>
+				<th style="width: 25%;" colspan="2">后二位</th>
+			</thead>
+			<tbody id="outputTable"></tbody>
+		</table>
+	</div>
+	<div style="margin: 0 auto; width: 93%;">
+		<hr style="margin: 18px 0;" />
+		<span style="display: block; text-align: left; font-weight: bold; font-size: 60px;">往期列表</span>
+	</div>
+	<div style="margin: 0; width: 100%;">
+		<table border="5" cellspacing="4" style="margin: 10px auto; width: 93%; text-align: center; max-height: 800px; overflow: auto;">
+			<thead style="font-size: 60px;">
+				<th style="width: 25%;">序&nbsp&nbsp号</th>
+				<th style="width: 50%;" colspan="5">前五位</th>
+				<th style="width: 25%;" colspan="2">后二位</th>
+			</thead>
+			<tbody id="officialOutputTable"></tbody>
+		</table>
+	</div>
+</body>
+<script type="text/javascript">
+	function getRandom(upperLimit){
+		return Math.floor(Math.random()*upperLimit)
+	}
+	function ToNumArray(array) {
+		let numArray = []
+		for(let i=0;i<array.length;i++)
+			numArray.push(Number(array[i]))
+		return numArray
+	}
+	function ArrayRemove(array, item) {
+		let index = array.indexOf(item)
+		if (index > -1) {
+			array.splice(index, 1)
+		}
+		return array
+	}
+	function ArraySub(array, startIdx, endIdx) {
+		if(array==null || array.length==0){
+			return []
+		}
+		if(endIdx>array.length){
+			endIdx = array.length
+		}
+		let subArr = []
+		for(let i = startIdx; i< endIdx; i++){
+			subArr.push(array[i])
+		}
+		return subArr
+	}
+	function ArrayIntersection(array1, array2) {
+		if(array1==null || array1.length==0){
+			return []
+		}
+		if(array2==null || array2.length==0){
+			return []
+		}
+		let intersection = []
+		for(let i=0;i<array1.length;i++){
+			let item = array1[i]
+
+			let index = array2.indexOf(item)
+			if (index > -1) {
+				intersection.push(item)
+			}
+		}
+		return intersection
+	}
+
+	let officialList = []
+	function getOfficialData() {
+		let request = new XMLHttpRequest()
+		request.open('GET', "https://webapi.sporttery.cn/gateway/lottery/getHistoryPageListV1.qry?gameNo=85&provinceId=0&isVerify=1&termLimits=0&pageNo=1&pageSize=9999", true)
+		request.send()
+		//获取数据后的处理程序
+		request.onreadystatechange = function() {
+			if (request.readyState == 4 && request.status == 200) {
+				let response = JSON.parse(request.responseText)
+				let valueList = response.value.list
+
+				for (let i = 0; i < valueList.length; i++) {
+					let officialOne = ToNumArray(valueList[i]["lotteryDrawResult"].split(" "))
+					officialList.push(officialOne)
+
+					if(i<50){
+						let trStr = "<tr style='font-size:60px;" + (i % 2 == 0 ? "background-color:#777;" : "background-color:#000;") + "'><td>" + (i + 1) + "组</td>"
+						for (let j=0;j<5;j++) {
+							let item = officialOne[j]
+							trStr += "<td>" + (item < 10 ? "0" + item : item) + "</td>"
+						}
+						for (let j=5;j<7;j++) {
+							let item = officialOne[j]
+							trStr += "<td>" + (item < 10 ? "0" + item : item) + "</td>"
+						}
+						trStr += "</tr>"
+
+						document.getElementById("officialOutputTable").innerHTML += trStr
+					}
+				}
+
+				generate()
+			}
+		}
+	}
+
+	function generate_one_front() {
+		let pool1 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35]
+
+		let front = [];
+		for (let i = 0; i < 5; i++) {
+			let item = pool1[getRandom(pool1.length)]
+			ArrayRemove(pool1, item)
+			front.push(item)
+		}
+		front = front.sort(function(a,b) {return a - b})
+
+		return front
+	}
+
+	function generate_one_after() {
+		let pool2 = [1,2,3,4,5,6,7,8,9,10,11,12]
+
+		let after = [];
+		for (let i = 5; i < 7; i++) {
+			let item = pool2[getRandom(pool2.length)]
+			ArrayRemove(pool2, item)
+			after.push(item)
+		}
+		after = after.sort(function(a,b) {return a - b})
+
+		if (!checkAfter(after)) {
+			after = generate_one_after()
+		}
+
+		return after
+	}
+
+	function checkFront(front){
+		if (parseInt(front[4] / 10) == 3 && (parseInt(front[3] / 10) == 0 || parseInt(front[3] / 10) == 1)) {
+			return false// 第五位是3X 且 第四位是0X或第四位是1X 的概率>>>0.06765604539502401
+		}
+		if (parseInt(front[0] >= 10) && parseInt(front[4] / 10) != 3) {
+			return false// 第一位不是0X 且 第五位不是3X 的概率>>>0.04321257092972501
+		}
+		if (parseInt(front[1] / 10) == 1 && parseInt(front[3] / 10) == 3) {
+			return false// 第二位1X 且 第四位3X 的概率>>> 0.11217808817110432
+		}
+
+		let official0sub = ArraySub(officialList[0], 0, 5)
+		let collectIntersection = ArrayIntersection(official0sub, front)
+		if (collectIntersection.length > 0) {
+			if (collectIntersection.length > 1) {
+				return false // 超过一个，直接排除
+			}
+			if (getRandom(100) < 90) {
+				return false // 其他百分九十概率排除
+			}
+		}
+
+		for (let i = 0; i < 5; i++) {
+			let frontItem = front[i]
+			if(i == 0 && frontItem == 1 && getRandom(100) < 30){
+				continue
+			}
+			if(i == 4 && frontItem == 35 && getRandom(100) < 30){
+				continue
+			}
+			if (officialList[1][i] == frontItem) {
+				return false
+			}
+			if (officialList[2][i] == frontItem) {
+				return false
+			}
+			if (officialList[3][i] == frontItem) {
+				return false
+			}
+			if (officialList[4][i] == frontItem) {
+				return false
+			}
+		}
+
+		for (let i = 1; i < 5; i++) {
+			let officialIndexsub = ArraySub(officialList[i], 0, 5)
+			let alikeItem = ArrayIntersection(officialIndexsub, front)
+			if (alikeItem.length > 2) {
+				return false
+			}
+		}
+
+		let string1 = front.join()
+		for (let i = 0; i < officialList.length; i++) {
+			let string2 = ArraySub(officialList[i], 0, 5).join().replace(",0","")
+			if(string2.indexOf("0") == 0){
+				string2 = string2.substring(1,string2.length)
+			}
+			if (string1 == string2) {
+				return false
+			}
+		}
+
+		return true
+	}
+
+	function checkAfter(after){
+		if (!((after[0] + after[1]) > 8)) {
+			return false // 后两位和大于8 的概率>>>0.8319511130510694
+		}
+		if (!(Math.abs(after[0] - after[1]) < 8)) {
+			return false // 后两位差小于8 的概率>>>0.8559580969009166
+		}
+
+		for (let i = 0; i < 5; i++) {
+			let officialIndexsub = ArraySub(officialList[i], 5, 7)
+			let alikeItem = ArrayIntersection(officialIndexsub, after)
+			if (alikeItem.length > 1) {
+				return false
+			}
+		}
+
+		return true
+	}
+
+	function generate() {
+		let outputNum = document.getElementById("outputNum").value
+
+		let generateFrontList = []
+		for (let i = 0; i < outputNum; i++) {
+			let one_front = generate_one_front()
+			if (!checkFront(one_front)) {
+				i--
+			}else{
+				generateFrontList.push(one_front)
+			}
+		}
+
+		let generateAfterList = []
+		for (let i = 0; i < outputNum; i++) {
+			let one_after = generate_one_after()
+			if (!checkAfter(one_after)) {
+				i--
+			}else{
+				generateAfterList.push(one_after)
+			}
+		}
+
+		let trStr = ""
+		for (let i = 0; i < outputNum; i++) {
+			let one_before = generateFrontList[i]
+			let one_after = generateAfterList[i]
+
+			trStr += "<tr style='font-size:60px;" + (i % 2 == 0 ? "background-color:#777;" : "background-color:#000;") + "'><td>" + (i + 1) + "组</td>"
+			for (let j=0;j<one_before.length;j++) {
+				let item = one_before[j]
+				trStr += "<td>" + (item < 10 ? "0" + item : item) + "</td>"
+			}
+			for (let j=0;j<one_after.length;j++) {
+				let item = one_after[j]
+				trStr += "<td>" + (item < 10 ? "0" + item : item) + "</td>"
+			}
+			trStr += "</tr>"
+		}
+		document.getElementById("outputTable").innerHTML = trStr
+	}
+
+	document.getElementById("startGenerate").onclick = function() {
+		generate()
+	}
+
+	getOfficialData()
+</script>
+</html>

@@ -1,0 +1,507 @@
+<html>
+<style type="text/css">
+.rule{
+	width:36px;
+	height:36px;
+}
+</style>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>v2-大乐透规则选号工具-引用规则版</title>
+</head>
+<body style="padding:160px 5px 0 5px;margin:0;width:100%;text-align:center;"><!--  -->
+	<div style="margin:0;width:100%;text-align:center;">
+		<div style="width:85%;margin:0 auto;">
+			<input id="showRuleList" style="width:20%;text-align:center;font-size:60px;" readonly="readonly" placeholder="规则"/>
+			<input id="outputNum" style="width:58%;text-align:center;font-size:60px;" type="number" placeholder="生成几组"/>
+			<input id="startGenerate" style="width:20%;text-align:center;font-size:60px;" readonly="readonly" placeholder="生成"/>
+		</div>
+		<div id="ruleList" style="width:85%;margin:0 auto;display: none;">
+			<table border="2" style="margin:10px auto;width:99.5%;text-align:center;">
+				<thead style="font-size:40px;"><th width="20%"><input id="allSelectRule" type="checkbox" style="width:36px;height:36px;" checked="checked"/></th><th>规则</th><th width="20%">命中率</th></thead>
+				<tbody style="font-size:40px;">
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front1In1To12"/></td><td>前区第一位1-12</td><td>90%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front2In3To19"/></td><td>前区第二位3-19</td><td>86%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front3In9To27"/></td><td>前区第三位9-27</td><td>87%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front4In17To33"/></td><td>前区第四位17-33</td><td>86%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front5In25To35"/></td><td>前区第五位25-35</td><td>87%</td></tr>
+					                                           
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="frontSumIn62To118"/></td><td>前区和62-118</td><td>82%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="frontAvgIn12To24"/></td><td>前区平均值12-24</td><td>87%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="frontExtIn17To33"/></td><td>前区极值差17-33</td><td>86%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="frontStaIn4To11"/></td><td>前区标准差平均值4-11</td><td>92%</td></tr>
+					                                          
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front1And2AvgIn2To17"/></td><td>前区1,2位平均值2-17</td><td>94%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front1And3AvgIn5To20"/></td><td>前区1,3位平均值5-20</td><td>92%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front1And4AvgIn8To22"/></td><td>前区1,4位平均值8-22</td><td>92%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front1And5AvgIn13To24"/></td><td>前区1,5位平均值13-24</td><td>90%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front2And3AvgIn5To27"/></td><td>前区2,3位平均值5-27</td><td>97%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front2And4AvgIn10To27"/></td><td>前区2,4位平均值10-27</td><td>92%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front2And5AvgIn14To29"/></td><td>前区2,5位平均值14-29</td><td>94%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front3And4AvgIn10To32"/></td><td>前区3,4位平均值10-32</td><td>97%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front3And5AvgIn17To32"/></td><td>前区3,5位平均值17-32</td><td>92%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="front4And5AvgIn20To35"/></td><td>前区4,5位平均值20-35</td><td>93%</td></tr>
+					                                      
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="after1In1To8"/></td><td>后区第一位1-8</td><td>91%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="after2In5To12"/></td><td>后区第二位5-12</td><td>91%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="afterSumIn7To19"/></td><td>后区两位和7-19</td><td>82%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="afterAvgIn4To10"/></td><td>后区平均值4-10</td><td>85%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="afterExtIn1To6"/></td><td>后区极值差1-6</td><td>85%</td></tr>
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="afterStaIn1To4"/></td><td>后区标准差平均值1-4</td><td>91%</td></tr>
+					                                           
+					<tr><td><input class="rule" type="checkbox" checked="checked" value="frontAfterAvgIn34To69"/></td><td>前后区平均值34-69</td><td>93%</td></tr>
+				</tbody>
+			</table>
+			<input id="testRuleContent" style="width:78%;text-align:center;font-size:60px;" placeholder="输入一组数据"/>
+			<input id="testRuleList" style="width:20%;text-align:center;font-size:60px;" readonly="readonly" placeholder="查看"/>
+			
+		</div>
+	</div>
+	<div style="margin:0;width:100%;">
+		<table border="5" cellspacing="4" style="margin:10px auto;width:85%;text-align:center;">
+			<thead style="font-size:60px;"><th>序号</th><th colspan="5">前五</th><th colspan="2">后二</th></thead>
+			<tbody id="outputTable"></tbody>
+		</table>
+	</div>
+</body>
+<script type="text/javascript">
+Array.prototype.indexOfInt = function(val){
+	for(let i=0;i<this.length;i++){	
+		if(Number(this[i] == Number(val))){
+			return i
+		}
+	}
+	return -1
+}
+
+Array.prototype.remove = function(vals) {
+	if(vals instanceof Array){
+		for(let i=0;i<vals.length;i++){	
+			var index = this.indexOfInt(vals[i]);
+			if (index > -1) {
+				this.splice(index, 1)
+			}
+		}
+	}else{
+		var index = this.indexOfInt(vals)
+		if (index > -1) {
+			this.splice(index, 1)
+		}
+	}
+};
+Array.prototype.sumInt = function() {
+	let sum = 0
+	for(let i=0;i<this.length;i++){	
+		sum = sum + Number(this[i])
+	}
+	return sum
+};
+Array.prototype.avgInt = function() {
+	return Number(this.sumInt())/this.length
+};
+Array.prototype.avgIntItem = function(index1,index2) {
+	return (Number(this[index1])+Number(this[index2]))/2
+};
+Array.prototype.sortInt = function() {
+	return this.sort(function (a,b){return a - b})
+};
+Array.prototype.extInt = function() {
+	let sortInt = this.sortInt()
+	return Number(sortInt[this.length-1])-Number(sortInt[0])
+};
+
+document.getElementById("startGenerate").onclick=function(){
+	if(document.getElementById("outputNum").value){
+		generate(document.getElementById("outputNum").value)
+	}else{
+		generate(3)
+	}
+}
+document.getElementById("showRuleList").onclick=function(){
+	let ruleList = document.getElementById("ruleList");
+    if(ruleList.style.display=="none") {
+    	ruleList.style.display = "block";
+    } else {
+    	ruleList.style.display = "none";
+    }
+}
+document.getElementById("allSelectRule").onclick=function(){
+	let ruleElement = document.getElementsByClassName("rule")
+	
+	let checkedNum=0
+	for(let i=0;i<ruleElement.length;i++){	
+		if(ruleElement[i].checked){
+			checkedNum++
+		}
+	}
+	
+	if(checkedNum<6){
+		for(let i=0;i<ruleElement.length;i++){	
+			ruleElement[i].checked=!ruleElement[i].checked
+		}
+	}else{
+		for(let i=0;i<ruleElement.length;i++){	
+			ruleElement[i].checked=document.getElementById("allSelectRule").checked
+		}
+	}
+}
+document.getElementById("testRuleList").onclick=function(){
+	let testRuleContent = document.getElementById("testRuleContent").value
+	
+	let hitRule = testOneRule(testRuleContent)
+	console.info(hitRule)
+	
+	document.getElementById("allSelectRule").checked=false
+	let ruleElement = document.getElementsByClassName("rule")
+	for(let i=0;i<ruleElement.length;i++){	
+		ruleElement[i].checked=false
+	}
+	for(let i=0;i<ruleElement.length;i++){	
+		if(-1!=hitRule.indexOf(ruleElement[i].value)){
+			ruleElement[i].checked=true
+		}
+	}
+	if(hitRule.length == ruleElement.length){
+		document.getElementById("allSelectRule").checked=true
+	}
+}
+
+generate(3)
+
+function generate(outputNum){
+	if(outputNum>100){
+		outputNum=100
+	}
+	var ruleElement = document.getElementsByClassName("rule");
+	
+	var ruleList = [];
+	for(let i=0;i<ruleElement.length;i++){	
+        if (ruleElement[i].checked == true) {
+        	ruleList.push(ruleElement[i].value);
+        }
+	}
+	
+	let trStr=""
+	for(let i=0;i<outputNum;i++){		
+		let one = generate_one(ruleList)
+		
+		trStr+="<tr style='font-size:60px;"+(i%2==0?"background-color:#cdcdcd;":"")+"'><td>第"+(i+1)+"组</td>"
+		for(let j=0;j<5;j++){
+			trStr += "<td>"+(one[j]<10?"0"+one[j]:one[j])+"</td>"
+		}
+		for(let j=5;j<7;j++){
+			trStr += "<td><b>"+(one[j]<10?"0"+one[j]:one[j])+"</b></td>"
+		}
+		trStr += "</tr>"
+	}
+	document.getElementById("outputTable").innerHTML = trStr
+}
+function generate_one(ruleList){
+	let one = generate_one_front(ruleList).concat(generate_one_after(ruleList))
+	
+	let avgInt = one.sumInt()/2
+	if(-1!=ruleList.indexOf("frontAfterAvgIn34To69") && !(avgInt >= 34 && avgInt <= 69)){
+		one = generate_one(ruleList)
+	}
+	return one
+}
+function generate_one_front(ruleList){
+	let pool1=getItemPool(1,35)
+	
+	let before=[];
+	for(let j=1;j<=5;j++){
+		let index = pool1[getRandom(pool1.length)-1]
+		if(j==1 &&-1!=ruleList.indexOf("front1In1To12")){
+			let outPool = getItemPool(1,12);
+			outPool.remove(before)
+			index = outPool[getRandom(outPool.length)-1]
+		}
+		if(j==2 &&-1!=ruleList.indexOf("front2In3To19")){
+			let outPool = getItemPool(3,19);
+			outPool.remove(before)
+			index = outPool[getRandom(outPool.length)-1]
+		}
+		if(j==3 &&-1!=ruleList.indexOf("front3In9To27")){
+			let outPool = getItemPool(9,27);
+			outPool.remove(before)
+			index = outPool[getRandom(outPool.length)-1]
+		}
+		if(j==4 &&-1!=ruleList.indexOf("front4In17To33")){
+			let outPool = getItemPool(17,33);
+			outPool.remove(before)
+			index = outPool[getRandom(outPool.length)-1]
+		}
+		if(j==5 &&-1!=ruleList.indexOf("front5In25To35")){
+			let outPool = getItemPool(25,35);
+			outPool.remove(before)
+			index = outPool[getRandom(outPool.length)-1]
+		}
+		pool1.remove(index)
+		before.push(index)
+	}
+	
+	before = before.sortInt()
+	
+	let sumInt = before.sumInt()
+	if(-1!=ruleList.indexOf("frontSumIn62To118") && !(sumInt >= 62 && sumInt <= 118)){
+		before = generate_one_front(ruleList)
+	}
+	let avgInt = before.avgInt()
+	if(-1!=ruleList.indexOf("frontAvgIn12To24") && !(avgInt >= 12 && avgInt <= 24)){
+		before = generate_one_front(ruleList)
+	}
+	let extInt = before.extInt()
+	if(-1!=ruleList.indexOf("frontExtIn17To33") && !(extInt >= 17 && extInt <= 33)){
+		before = generate_one_front(ruleList)
+	}
+	let avgIntItem = -1;
+	
+	avgIntItem = before.avgIntItem(0,1)
+	if(-1!=ruleList.indexOf("front1And2AvgIn2To17") && !(avgIntItem >= 2 && avgIntItem <= 17)){
+		before = generate_one_front(ruleList)
+	}
+	avgIntItem = before.avgIntItem(0,2)
+	if(-1!=ruleList.indexOf("front1And3AvgIn5To20") && !(avgIntItem >= 5 && avgIntItem <= 20)){
+		before = generate_one_front(ruleList)
+	}
+	avgIntItem = before.avgIntItem(0,3)
+	if(-1!=ruleList.indexOf("front1And4AvgIn8To22") && !(avgIntItem >= 8 && avgIntItem <= 22)){
+		before = generate_one_front(ruleList)
+	}
+	avgIntItem = before.avgIntItem(0,4)
+	if(-1!=ruleList.indexOf("front1And5AvgIn13To24") && !(avgIntItem >= 13 && avgIntItem <= 24)){
+		before = generate_one_front(ruleList)
+	}
+	avgIntItem = before.avgIntItem(1,2)
+	if(-1!=ruleList.indexOf("front2And3AvgIn5To27") && !(avgIntItem >= 5 && avgIntItem <= 27)){
+		before = generate_one_front(ruleList)
+	}
+	avgIntItem = before.avgIntItem(1,3)
+	if(-1!=ruleList.indexOf("front2And4AvgIn10To27") && !(avgIntItem >= 10 && avgIntItem <= 27)){
+		before = generate_one_front(ruleList)
+	}
+	avgIntItem = before.avgIntItem(1,4)
+	if(-1!=ruleList.indexOf("front2And5AvgIn14To29") && !(avgIntItem >= 14 && avgIntItem <= 29)){
+		before = generate_one_front(ruleList)
+	}
+	avgIntItem = before.avgIntItem(2,3)
+	if(-1!=ruleList.indexOf("front3And4AvgIn10To32") && !(avgIntItem >= 10 && avgIntItem <= 32)){
+		before = generate_one_front(ruleList)
+	}
+	avgIntItem = before.avgIntItem(2,4)
+	if(-1!=ruleList.indexOf("front3And5AvgIn17To32") && !(avgIntItem >= 17 && avgIntItem <= 32)){
+		before = generate_one_front(ruleList)
+	}
+	avgIntItem = before.avgIntItem(3,4)
+	if(-1!=ruleList.indexOf("front4And5AvgIn20To35") && !(avgIntItem >= 20 && avgIntItem <= 35)){
+		before = generate_one_front(ruleList)
+	}
+	
+	if(-1!=ruleList.indexOf("frontStaIn4To11")){	
+		let staIntArr = [];
+		for(let j=0;j<5;j++){
+			if(avgInt>Number(before[j])){
+				staIntArr.push(avgInt-before[j])
+			}else{
+				staIntArr.push(before[j]-avgInt)
+			}
+		}
+		let staInt = staIntArr.sumInt()/5
+		if(!(staInt >= 4 && staInt <= 11)){
+			before = generate_one_front(ruleList)
+		}
+	}
+	
+	return before
+}
+
+function generate_one_after(ruleList){		
+	let pool2=getItemPool(1,12)
+
+	let after=[];
+	for(let j=6;j<=7;j++){
+		let index = pool2[getRandom(pool2.length)-1]
+		if(j==6 &&-1!= ruleList.indexOf("after1In1To8")){
+			let outPool = getItemPool(1,8);
+			outPool.remove(after)
+			index = outPool[getRandom(outPool.length)-1]
+		}
+		if(j==7 &&-1!= ruleList.indexOf("after2In5To12")){
+			let outPool = getItemPool(5,12);
+			outPool.remove(after)
+			index = outPool[getRandom(outPool.length)-1]
+		}
+		pool2.remove(index)
+		after.push(index)
+	}
+	
+	after = after.sortInt()
+	
+	let sumInt = after.sumInt()
+	if(-1!=ruleList.indexOf("afterSumIn7To19") && !(sumInt >= 7 && sumInt <= 19)){
+		after = generate_one_after(ruleList)
+	}
+	let avgInt = after.avgInt()
+	if(-1!=ruleList.indexOf("afterAvgIn4To10") && !(avgInt >= 4 && avgInt <= 10)){
+		after = generate_one_after(ruleList)
+	}
+	let extInt = after.extInt()
+	if(-1!=ruleList.indexOf("afterExtIn1To6") && !(extInt >= 1 && extInt <= 6)){
+		after = generate_one_after(ruleList)
+	}
+	
+	if(-1!=ruleList.indexOf("afterStaIn1To4")){
+		let staIntArr = [];
+		for(let j=0;j<1;j++){
+			if(avgInt>Number(after[j])){
+				staIntArr.push(avgInt-after[j])
+			}else{
+				staIntArr.push(after[j]-avgInt)
+			}
+		}
+		let staInt = staIntArr.sumInt()/2
+		if(!(staInt >= 1 && staInt <= 4)){
+			before = generate_one_after(ruleList)
+		}
+	}
+	
+	return after
+}
+function getItemPool(start,end){
+	let pool1=[]
+	for(let j=start;j<=end;j++){
+		pool1.push(j)
+	}	
+	return pool1
+}
+function getRandom(upperLimit){
+	return Math.floor(Math.random()*upperLimit)+1
+}
+
+function testOneRule(test){
+	one = test.split(" ")
+	before = one.slice(0,5)
+	after = one.slice(5,7)
+	
+	let hitRule = []
+	
+	if(-1!=getItemPool(1,12).indexOfInt(before[0])){
+		hitRule.push("front1In1To12")
+	}
+	if(-1!=getItemPool(3,19).indexOfInt(before[1])){
+		hitRule.push("front2In3To19")
+	}
+	if(-1!=getItemPool(9,27).indexOfInt(before[2])){
+		hitRule.push("front3In9To27")
+	}
+	if(-1!=getItemPool(17,33).indexOfInt(before[3])){
+		hitRule.push("front4In17To33")
+	}
+	if(-1!=getItemPool(25,35).indexOfInt(before[4])){
+		hitRule.push("front5In25To35")
+	}
+	
+	let sumInt = before.sumInt()
+	if(sumInt >= 62 && sumInt <= 118){
+		hitRule.push("frontSumIn62To118")
+	}
+	let avgInt = before.avgInt()
+	if(avgInt >= 12 && avgInt <= 24){
+		hitRule.push("frontAvgIn12To24")
+	}
+	let extInt = before.extInt()
+	if(extInt >= 17 && extInt <= 33){
+		hitRule.push("frontExtIn17To33")
+	}
+	
+	let avgIntItem = -1;
+	
+	avgIntItem = before.avgIntItem(0,1)
+	if(avgIntItem >= 2 && avgIntItem <= 17){
+		hitRule.push("front1And2AvgIn2To17")
+	}
+	avgIntItem = before.avgIntItem(0,2)
+	if(avgIntItem >= 5 && avgIntItem <= 20){
+		hitRule.push("front1And3AvgIn5To20")
+	}
+	avgIntItem = before.avgIntItem(0,3)
+	if(avgIntItem >= 8 && avgIntItem <= 22){
+		hitRule.push("front1And4AvgIn8To22")
+	}
+	avgIntItem = before.avgIntItem(0,4)
+	if(avgIntItem >= 13 && avgIntItem <= 24){
+		hitRule.push("front1And5AvgIn13To24")
+	}
+	avgIntItem = before.avgIntItem(1,2)
+	if(avgIntItem >= 5 && avgIntItem <= 27){
+		hitRule.push("front2And3AvgIn5To27")
+	}
+	avgIntItem = before.avgIntItem(1,3)
+	if(avgIntItem >= 10 && avgIntItem <= 27){
+		hitRule.push("front2And4AvgIn10To27")
+	}
+	avgIntItem = before.avgIntItem(1,4)
+	if(avgIntItem >= 14 && avgIntItem <= 29){
+		hitRule.push("front2And5AvgIn14To29")
+	}
+	avgIntItem = before.avgIntItem(2,3)
+	if(avgIntItem >= 10 && avgIntItem <= 32){
+		hitRule.push("front3And4AvgIn10To32")
+	}
+	avgIntItem = before.avgIntItem(2,4)
+	if(avgIntItem >= 17 && avgIntItem <= 32){
+		hitRule.push("front3And5AvgIn17To32")
+	}
+	avgIntItem = before.avgIntItem(3,4)
+	if(avgIntItem >= 20 && avgIntItem <= 35){
+		hitRule.push("front4And5AvgIn20To35")
+	}
+	
+	let standardDeviation = 0
+	for(let j=0;j<5;j++){
+		standardDeviation += avgInt<before[j] ? before[j]-avgInt : avgInt-before[j]
+	}
+	standardDeviation = standardDeviation/5
+	if(standardDeviation >= 4 && standardDeviation <= 11){
+		hitRule.push("frontStaIn4To11")
+	}
+	
+	if(-1!=getItemPool(1,8).indexOfInt(after[0])){
+		hitRule.push("after1In1To8")
+	}
+	if(-1!=getItemPool(5,12).indexOfInt(after[1])){
+		hitRule.push("after2In5To12")
+	}
+	
+	sumInt = after.sumInt()
+	if(sumInt >= 7 && sumInt <= 19){
+		hitRule.push("afterSumIn7To19")
+	}
+	avgInt = after.avgInt()
+	if(avgInt >= 4 && avgInt <= 10){
+		hitRule.push("afterAvgIn4To10")
+	}
+	extInt = after.extInt()
+	if(extInt >= 1 && extInt <= 6){
+		hitRule.push("afterExtIn1To6")
+	}
+	
+	standardDeviation = 0
+	for(let j=0;j<=1;j++){
+		standardDeviation += avgInt<after[j] ? after[j]-avgInt : avgInt-after[j]
+	}
+	standardDeviation = standardDeviation/2
+	if(standardDeviation >= 1 && standardDeviation <= 4){
+		hitRule.push("afterStaIn1To4")
+	}
+	
+	avgInt = one.sumInt()/2
+	if(avgInt >= 34 && avgInt <= 69){
+		hitRule.push("frontAfterAvgIn34To69")
+	}
+	
+	
+	return hitRule
+}
+</script>
+</html>

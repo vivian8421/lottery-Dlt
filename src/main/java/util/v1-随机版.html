@@ -1,0 +1,100 @@
+﻿<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>v1-大乐透规则选号工具-原始随机版</title>
+</head>
+<body style="padding:300px 5px 0 5px;margin:0;width:100%;text-align:center;">
+	<div style="margin:0;width:100%;text-align:center;">
+		<input id="outputNum" style="width:85%;text-align:center;font-size:60px;" type="number" placeholder="生成几组"/>
+	</div>
+	<div style="margin:0;width:100%;">
+		<table border="5" cellspacing="4" style="margin:10px auto;width:85%;text-align:center;">
+			<thead style="font-size:60px;"><th>序号</th><th colspan="5">前五</th><th colspan="2">后二</th></thead>
+			<tbody id="outputTable">
+				<tr style="visibility:hidden;"><td>一号</td><td>01</td><td>02</td><td>03</td><td>04</td><td>05</td><td>06</td><td>07</td></tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+<script type="text/javascript">
+Array.prototype.remove = function(val) {
+	var index = this.indexOf(val);
+	if (index > -1) {
+		this.splice(index, 1);
+	}
+};
+
+
+document.getElementById("outputNum").onchange=function(){generate(document.getElementById("outputNum").value)}
+
+generate(3)
+
+function generate(outputNum){
+	if(outputNum>10){
+		outputNum=10
+	}
+	
+	let trStr=""
+	for(let i=0;i<outputNum;i++){		
+		let one = generate_one_before().concat(generate_one_after())
+		
+		trStr+="<tr style='font-size:60px;"+(i%2==0?"background-color:#cdcdcd;":"")+"'><td>第"+(i+1)+"组</td>"
+		for(let j=0;j<5;j++){
+			trStr += "<td>"
+			trStr += one[j]
+			trStr += "</td>"
+		}
+		for(let j=5;j<7;j++){
+			trStr += "<td><b>"
+			trStr += one[j]
+			trStr += "</b></td>"
+		}
+		trStr += "</tr>"
+	}
+	document.getElementById("outputTable").innerHTML = trStr
+}
+function generate_one_before(){	
+	let pool1=[]
+	for(let j=1;j<=35;j++){
+		pool1.push(j)
+	}	
+	let beforeSum=0
+	let before=[];
+	for(let j=0;j<5;j++){
+		let index = pool1[getRandom(pool1.length)-1]
+		beforeSum+=index
+		pool1.remove(index)
+		before.push(index<10?"0"+index:index)
+	}
+	if(beforeSum>=62 && beforeSum<=118){		
+		before = before.sort(function (a,b){return a - b})
+		return before
+	}else{
+		return generate_one_before()
+	}
+}
+function generate_one_after(){		
+	let pool2=[]
+	for(let j=1;j<=12;j++){
+		pool2.push(j)
+	}
+	let afterSum=0
+	let after=[];
+	for(let j=5;j<7;j++){
+		let index = pool2[getRandom(pool2.length)-1]
+		afterSum+=index
+		pool2.remove(index)
+		after.push(index<10?"0"+index:index)
+	}
+	if(afterSum>=7 && afterSum<=19){		
+		after = after.sort(function (a,b){return a - b})
+		return after
+	}else{
+		return generate_one_after()
+	}
+}
+function getRandom(upperLimit){
+	return Math.floor(Math.random()*upperLimit)+1
+}
+</script>
+</html>
